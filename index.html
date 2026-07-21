@@ -326,7 +326,6 @@
         .col-6  { grid-column: span 6; }
         .col-4  { grid-column: span 4; }
 
-        /* Media Queries for TV / Tablet / Mobile / iPad / iPhone */
         @media (min-width: 1600px) {
             .chart-container { height: 360px !important; }
         }
@@ -734,8 +733,21 @@
                     <div class="chart-container"><canvas id="chartDonutP2"></canvas></div>
                 </div>
 
+                <!-- GRÁFICO DINÁMICO POR PRODUCTO INDEPENDIENTE -->
                 <div class="card-box col-6">
-                    <div class="card-title"><i class="fa-solid fa-chart-line" style="color:var(--cyan-bright);"></i> Variación % de Unidades Entregadas</div>
+                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <span><i class="fa-solid fa-chart-line" style="color:var(--cyan-bright);"></i> Comparativa por Producto (Mayo vs Junio)</span>
+                        <select class="select-custom" id="lineProductSelect" onchange="updateLineProductChart()" style="padding:4px 8px; font-size:12px;">
+                            <option value="ALL">Ver Todos los Clave</option>
+                            <option value="GOLDEN LURE">GOLDEN LURE</option>
+                            <option value="DIAMANTEX">DIAMANTEX</option>
+                            <option value="OXITRON GRIS">OXITRON GRIS</option>
+                            <option value="OXITRON NEGRO">OXITRON NEGRO</option>
+                            <option value="ARTISTRY">ARTISTRY</option>
+                            <option value="FEM VITA">FEM VITA</option>
+                            <option value="OUHOE">OUHOE</option>
+                        </select>
+                    </div>
                     <div class="chart-container"><canvas id="chartLineP2"></canvas></div>
                 </div>
 
@@ -796,7 +808,7 @@
         <p>© 2026 Alfalion Investment — Dashboard Ejecutivo Multi-Pantalla publicado en GitHub Pages</p>
     </footer>
 
-    <!-- JAVASCRIPT ULTRA RESPONSIVO -->
+    <!-- JAVASCRIPT ULTRA RESPONSIVO Y DINÁMICO -->
     <script>
         Chart.defaults.responsive = true;
         Chart.defaults.maintainAspectRatio = false;
@@ -1033,20 +1045,65 @@
             }
         });
 
-        new Chart(document.getElementById('chartLineP2').getContext('2d'), {
-            type: 'line',
+        // DICCIONARIO Y FUNCIÓN DE FILTRADO DINÁMICO POR PRODUCTO (MAYO VS JUNIO)
+        const productComparisonData = {
+            ALL: {
+                labels: ['Golden Lure', 'Diamantex', 'Oxitron Gris', 'Oxitron Negro', 'Artistry', 'Fem Vita', 'Ouhoe'],
+                mayo: [610, 930, 521, 304, 15, 6, 83],
+                junio: [500, 926, 297, 208, 118, 87, 85]
+            },
+            'GOLDEN LURE': { singleMayo: 610, singleJunio: 500 },
+            'DIAMANTEX': { singleMayo: 930, singleJunio: 926 },
+            'OXITRON GRIS': { singleMayo: 521, singleJunio: 297 },
+            'OXITRON NEGRO': { singleMayo: 304, singleJunio: 208 },
+            'ARTISTRY': { singleMayo: 15, singleJunio: 118 },
+            'FEM VITA': { singleMayo: 6, singleJunio: 87 },
+            'OUHOE': { singleMayo: 83, singleJunio: 85 }
+        };
+
+        const ctxLineP2 = document.getElementById('chartLineP2').getContext('2d');
+        let chartLineP2 = new Chart(ctxLineP2, {
+            type: 'bar',
             data: {
-                labels: ['Artistry', 'Fem Vita', 'Diamantex', 'Golden Lure', 'Oxitron Gris'],
-                datasets: [{
-                    label: 'Variación %',
-                    data: [686.7, 1350.0, -0.4, -18.0, -42.9],
-                    borderColor: '#00b4d8',
-                    backgroundColor: 'rgba(0, 180, 216, 0.1)',
-                    fill: true,
-                    tension: 0.3
-                }]
+                labels: productComparisonData.ALL.labels,
+                datasets: [
+                    { label: 'Unidades Mayo', data: productComparisonData.ALL.mayo, backgroundColor: '#1e4976', borderRadius: 6 },
+                    { label: 'Unidades Junio', data: productComparisonData.ALL.junio, backgroundColor: '#00b4d8', borderRadius: 6 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, position: 'top' },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: { y: { beginAtZero: true } }
             }
         });
+
+        function updateLineProductChart() {
+            const selectedProd = document.getElementById('lineProductSelect').value;
+            
+            if (selectedProd === 'ALL') {
+                chartLineP2.data.labels = productComparisonData.ALL.labels;
+                chartLineP2.data.datasets[0].label = 'Unidades Mayo';
+                chartLineP2.data.datasets[0].data = productComparisonData.ALL.mayo;
+                
+                chartLineP2.data.datasets[1].label = 'Unidades Junio';
+                chartLineP2.data.datasets[1].data = productComparisonData.ALL.junio;
+            } else {
+                const item = productComparisonData[selectedProd];
+                chartLineP2.data.labels = [`${selectedProd} (Comparativa)`];
+                chartLineP2.data.datasets[0].label = 'Unidades Mayo';
+                chartLineP2.data.datasets[0].data = [item.singleMayo];
+                
+                chartLineP2.data.datasets[1].label = 'Unidades Junio';
+                chartLineP2.data.datasets[1].data = [item.singleJunio];
+            }
+            
+            chartLineP2.update();
+        }
 
         new Chart(document.getElementById('chartShalomP2').getContext('2d'), {
             type: 'bar',
