@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Alfalion Investment | Dashboard Integrado Multi-Pantalla</title>
-    <!-- FontAwesome, Chart.js & SheetJS -->
+    <title>Alfalion Investment | Dashboard Ejecutivo Multi-Pantalla</title>
+    
+    <!-- LIBRERÍAS EXTERNAS (Iconos, Gráficos y Excel) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- ================= ESTILOS CSS INCRUSTADOS AQUÍ ================= -->
     <style>
         :root {
             --navy-dark: #070d14;
@@ -15,6 +18,26 @@
             --blue-main: #1e4976;
             --cyan-bright: #00b4d8;
             --cyan-light: #90e0ef;
+            --bg-light: #0f172a;
+            --card-light: #1e293b;
+            --text-dark: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-light: #334155;
+            --green: #4ade80;
+            --red: #f87171;
+            --orange: #facc15;
+            
+            --badge-success-bg: rgba(34, 197, 94, 0.15);
+            --badge-success-text: #4ade80;
+            --badge-danger-bg: rgba(239, 68, 68, 0.15);
+            --badge-danger-text: #f87171;
+            --badge-warning-bg: rgba(234, 179, 8, 0.15);
+            --badge-warning-text: #facc15;
+            --badge-neutral-bg: rgba(148, 163, 184, 0.15);
+            --badge-neutral-text: #cbd5e1;
+        }
+
+        body.light-theme {
             --bg-light: #f4f7f6;
             --card-light: #ffffff;
             --text-dark: #0f172a;
@@ -23,518 +46,141 @@
             --green: #10b981;
             --red: #ef4444;
             --orange: #f59e0b;
-        }
-
-        body.dark-theme {
-            --bg-light: #070d14;
-            --card-light: #0f2537;
-            --text-dark: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-light: #1e2d3d;
+            
+            --badge-success-bg: #e6fffa;
+            --badge-success-text: #047857;
+            --badge-danger-bg: #fef2f2;
+            --badge-danger-text: #b91c1c;
+            --badge-warning-bg: #fffbeb;
+            --badge-warning-text: #b45309;
+            --badge-neutral-bg: rgba(148, 163, 184, 0.15);
+            --badge-neutral-text: #334155;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
 
         html, body {
-            width: 100%;
-            min-height: 100vh;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            padding-bottom: clamp(30px, 4vh, 60px);
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overflow-x: hidden;
+            width: 100%; min-height: 100vh; background-color: var(--bg-light); color: var(--text-dark);
+            padding-bottom: clamp(30px, 4vh, 60px); transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden;
         }
 
-        /* Executive Header */
         header {
             background: linear-gradient(135deg, #070d14 0%, #0f2537 50%, #004d73 100%);
-            color: white;
-            padding: clamp(12px, 2vh, 20px) clamp(16px, 3vw, 40px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            color: white; padding: clamp(12px, 2vh, 20px) clamp(16px, 3vw, 40px); box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky; top: 0; z-index: 1000;
         }
 
-        .header-container {
-            max-width: 1800px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .brand-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .brand-logo {
-            height: clamp(35px, 4vw, 50px);
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
+        .header-container { max-width: 1800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .brand-title-wrap { display: flex; align-items: center; gap: 15px; }
+        .brand-logo { height: clamp(35px, 4vw, 50px); width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+        
         .brand-info h1 {
-            font-size: clamp(18px, 2.2vw, 32px);
-            font-weight: 900;
-            letter-spacing: 1.2px;
+            font-size: clamp(18px, 2.2vw, 32px); font-weight: 900; letter-spacing: 1.2px;
             background: linear-gradient(90deg, #ffffff 0%, #90e0ef 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            line-height: 1.2;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase; line-height: 1.2;
         }
-
-        .brand-info p { 
-            font-size: clamp(10px, 1vw, 14px); 
-            color: #90e0ef; 
-            letter-spacing: 0.8px; 
-            margin-top: 3px;
-            font-weight: 600;
-        }
-
+        
+        .brand-info p { font-size: clamp(10px, 1vw, 14px); color: #90e0ef; letter-spacing: 0.8px; margin-top: 3px; font-weight: 600; }
         .header-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
-        /* ================= ESTILOS EFECTOS CSS FX EN BOTONES ================= */
         .btn-action {
-            position: relative;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(144, 224, 239, 0.35);
-            color: white;
-            padding: clamp(7px, 1.1vh, 11px) clamp(12px, 1.3vw, 20px);
-            border-radius: 8px;
-            font-size: clamp(11px, 0.9vw, 14px);
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(4px);
+            position: relative; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(144, 224, 239, 0.35);
+            color: white; padding: clamp(7px, 1.1vh, 11px) clamp(12px, 1.3vw, 20px); border-radius: 8px;
+            font-size: clamp(11px, 0.9vw, 14px); font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 8px; overflow: hidden;
         }
+        .btn-action:hover { background: var(--cyan-bright); color: #000; border-color: var(--cyan-bright); transform: translateY(-3px); }
+        .btn-excel { background: linear-gradient(135deg, #10b981 0%, #047857 100%); border: none; }
+        .btn-excel:hover { background: linear-gradient(135deg, #34d399 0%, #059669 100%); color: white; }
 
-        .btn-action::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -150%;
-            width: 100%;
-            height: 200%;
-            background: linear-gradient(
-                60deg,
-                transparent,
-                rgba(255, 255, 255, 0.4),
-                transparent
-            );
-            transform: rotate(25deg);
-            transition: all 0.6s ease-in-out;
-        }
-
-        .btn-action:hover::before {
-            left: 150%;
-        }
-
-        .btn-action:hover {
-            background: var(--cyan-bright);
-            color: #000;
-            border-color: var(--cyan-bright);
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 20px rgba(0, 180, 216, 0.4);
-        }
-
-        .btn-action:active {
-            transform: translateY(1px) scale(0.97);
-            box-shadow: 0 2px 8px rgba(0, 180, 216, 0.3);
-        }
-
-        .btn-excel {
-            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-            border: none;
-            color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
-        }
-
-        .btn-excel:hover {
-            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.5);
-        }
-
-        /* Executive Insights Banner */
         .insights-banner {
-            background: var(--card-light);
-            border-radius: 12px;
-            border-left: 5px solid var(--cyan-bright);
-            padding: 14px 18px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
+            background: var(--card-light); border-radius: 12px; border-left: 5px solid var(--cyan-bright);
+            padding: 14px 18px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            display: flex; align-items: center; gap: 15px; flex-wrap: wrap;
         }
+        .insights-title { font-size: 13px; font-weight: 800; color: var(--cyan-bright); text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+        .insights-list { display: flex; gap: 15px; flex-wrap: wrap; font-size: 12px; font-weight: 600; }
+        .insight-pill { padding: 4px 10px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+        .pill-green { background: rgba(16, 185, 129, 0.12); color: var(--green); }
+        .pill-red { background: rgba(239, 68, 68, 0.12); color: var(--red); }
+        .pill-blue { background: rgba(0, 180, 216, 0.12); color: var(--cyan-bright); }
 
-        .insights-title {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--cyan-bright);
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .insights-list {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .insight-pill {
-            padding: 4px 10px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .pill-green { background: rgba(16, 185, 129, 0.12); color: #047857; }
-        .pill-red { background: rgba(239, 68, 68, 0.12); color: #b91c1c; }
-        .pill-blue { background: rgba(0, 180, 216, 0.12); color: #0369a1; }
-
-        /* Navigation Tabs FX */
-        .page-tabs-bar {
-            background: rgba(0, 0, 0, 0.25);
-            padding: 10px clamp(16px, 3vw, 40px) 0 clamp(16px, 3vw, 40px);
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .tabs-container {
-            max-width: 1800px;
-            margin: 0 auto;
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
+        .page-tabs-bar { background: rgba(0, 0, 0, 0.25); padding: 10px clamp(16px, 3vw, 40px) 0 clamp(16px, 3vw, 40px); border-top: 1px solid rgba(255,255,255,0.1); }
+        .tabs-container { max-width: 1800px; margin: 0 auto; display: flex; gap: 10px; overflow-x: auto; }
         .tab-btn {
-            position: relative;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-bottom: none;
-            color: #90e0ef;
-            padding: clamp(9px, 1.2vh, 13px) clamp(14px, 1.6vw, 26px);
-            border-radius: 12px 12px 0 0;
-            font-size: clamp(12px, 0.95vw, 15px);
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-bottom: none;
+            color: #90e0ef; padding: clamp(9px, 1.2vh, 13px) clamp(14px, 1.6vw, 26px); border-radius: 12px 12px 0 0;
+            font-size: clamp(12px, 0.95vw, 15px); font-weight: 700; cursor: pointer; transition: all 0.3s ease; white-space: nowrap;
         }
-
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .tab-btn.active {
-            background: var(--bg-light);
-            color: var(--navy-card);
-            border-color: var(--cyan-bright);
-            box-shadow: 0 -6px 16px rgba(0,180,216,0.35);
-        }
-
-        body.dark-theme .tab-btn.active {
-            color: var(--cyan-light);
-            background: var(--navy-dark);
-        }
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.2); color: white; }
+        .tab-btn.active { background: var(--bg-light); color: var(--cyan-bright); border-color: var(--cyan-bright); }
 
         .page-content { display: none; }
         .page-content.active { display: block; }
 
-        /* Toolbar */
-        .toolbar {
-            max-width: 1800px;
-            margin: 20px auto 10px auto;
-            padding: 0 clamp(16px, 3vw, 40px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .toolbar-title { 
-            font-size: clamp(15px, 1.3vw, 22px); 
-            font-weight: 700; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-        }
-
+        .toolbar { max-width: 1800px; margin: 20px auto 10px auto; padding: 0 clamp(16px, 3vw, 40px); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .toolbar-title { font-size: clamp(15px, 1.3vw, 22px); font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .toolbar-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-        .search-box-wrap {
-            position: relative;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            max-width: 320px;
-        }
-
-        .search-box-wrap i.search-icon {
-            position: absolute;
-            left: 12px;
-            color: var(--cyan-bright);
-            font-size: 14px;
-        }
-
+        .search-box-wrap { position: relative; display: flex; align-items: center; width: 100%; max-width: 320px; }
+        .search-box-wrap i.search-icon { position: absolute; left: 12px; color: var(--cyan-bright); font-size: 14px; }
         .global-search-input {
-            width: 100%;
-            background: var(--card-light);
-            color: var(--text-dark);
-            border: 2px solid var(--cyan-bright);
-            padding: 8px 32px 8px 36px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 180, 216, 0.15);
+            width: 100%; background: var(--card-light); color: var(--text-dark); border: 2px solid var(--cyan-bright);
+            padding: 8px 32px 8px 36px; border-radius: 20px; font-size: 13px; font-weight: 600; transition: all 0.3s ease; outline: none;
         }
+        .search-clear-btn { position: absolute; right: 10px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 12px; display: none; }
+        .search-results-badge { font-size: 11px; font-weight: 700; background: rgba(0, 180, 216, 0.15); color: var(--cyan-bright); padding: 4px 10px; border-radius: 12px; display: none; }
+        mark.highlight { background-color: #fef08a; color: #854d0e; padding: 2px 4px; border-radius: 4px; font-weight: 700; }
 
-        .global-search-input:focus {
-            outline: none;
-            box-shadow: 0 0 12px rgba(0, 180, 216, 0.4);
-        }
+        .select-custom { background: var(--card-light); color: var(--text-dark); border: 1px solid var(--border-light); padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
 
-        .search-clear-btn {
-            position: absolute;
-            right: 10px;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 12px;
-            display: none;
-        }
+        .toggle-pills { display: flex; background: var(--border-light); padding: 4px; border-radius: 8px; gap: 2px; }
+        .btn-pill { border: none; background: transparent; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.25s ease; }
+        .btn-pill.active { background: linear-gradient(135deg, var(--blue-main), var(--cyan-bright)); color: white; }
 
-        .search-results-badge {
-            font-size: 11px;
-            font-weight: 700;
-            background: rgba(0, 180, 216, 0.15);
-            color: var(--cyan-bright);
-            padding: 4px 10px;
-            border-radius: 12px;
-            display: none;
-        }
-
-        mark.highlight {
-            background-color: #fef08a;
-            color: #854d0e;
-            padding: 2px 4px;
-            border-radius: 4px;
-            font-weight: 700;
-        }
-
-        .select-custom {
-            background: var(--card-light);
-            color: var(--text-dark);
-            border: 1px solid var(--border-light);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* TOGGLE PILLS FX */
-        .toggle-pills {
-            display: flex;
-            background: var(--border-light);
-            padding: 4px;
-            border-radius: 8px;
-            gap: 2px;
-        }
-
-        .btn-pill {
-            border: none;
-            background: transparent;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .btn-pill.active {
-            background: linear-gradient(135deg, var(--blue-main), var(--cyan-bright));
-            color: white;
-            box-shadow: 0 3px 10px rgba(0,180,216,0.35);
-        }
-
-        .btn-pill:hover:not(.active) {
-            color: var(--text-dark);
-            background: rgba(0,0,0,0.05);
-        }
-
-        .container { 
-            max-width: 1800px; 
-            margin: 0 auto; 
-            padding: 0 clamp(16px, 3vw, 40px); 
-        }
-
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .kpi-card {
-            background: var(--card-light);
-            padding: 18px;
-            border-radius: 12px;
-            border: 1px solid var(--border-light);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            border-top: 4px solid var(--cyan-bright);
-            transition: transform 0.2s ease;
-        }
-
+        .container { max-width: 1800px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 40px); }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: var(--card-light); padding: 18px; border-radius: 12px; border: 1px solid var(--border-light); border-top: 4px solid var(--cyan-bright); transition: transform 0.2s ease; }
         .kpi-card:hover { transform: translateY(-3px); }
-
         .kpi-head { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
-
-        .kpi-icon {
-            width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 180, 216, 0.1); color: var(--cyan-bright);
-            display: flex; align-items: center; justify-content: center; font-size: 16px;
-        }
-
+        .kpi-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(0, 180, 216, 0.1); color: var(--cyan-bright); display: flex; align-items: center; justify-content: center; font-size: 16px; }
         .kpi-val { font-size: clamp(24px, 2vw, 36px); font-weight: 800; margin: 8px 0 2px 0; color: var(--text-dark); }
-
         .kpi-foot { font-size: 11px; display: flex; align-items: center; gap: 6px; }
 
         .text-green { color: var(--green); font-weight: 700; }
         .text-red { color: var(--red); font-weight: 700; }
 
         .dashboard-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+        .col-12 { grid-column: span 12; } .col-8 { grid-column: span 8; } .col-6 { grid-column: span 6; } .col-4 { grid-column: span 4; }
+        @media (max-width: 1024px) { .col-8, .col-6, .col-4 { grid-column: span 12; } .chart-container { height: 280px !important; } }
+        @media (max-width: 600px) { .chart-container { height: 230px !important; } .toolbar { flex-direction: column; align-items: stretch; } }
 
-        .col-12 { grid-column: span 12; }
-        .col-8  { grid-column: span 8; }
-        .col-6  { grid-column: span 6; }
-        .col-4  { grid-column: span 4; }
-
-        @media (min-width: 1600px) {
-            .chart-container { height: 360px !important; }
-        }
-
-        @media (max-width: 1024px) {
-            .col-8, .col-6, .col-4 { grid-column: span 12; }
-            .chart-container { height: 280px !important; }
-            .search-box-wrap { max-width: 100%; }
-        }
-
-        @media (max-width: 600px) {
-            .chart-container { height: 230px !important; }
-            .kpi-val { font-size: 24px; }
-            .toolbar { flex-direction: column; align-items: stretch; }
-            .toolbar-controls { width: 100%; justify-content: space-between; }
-        }
-
-        .card-box {
-            background: var(--card-light);
-            border-radius: 12px;
-            border: 1px solid var(--border-light);
-            padding: clamp(14px, 1.5vw, 24px);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            width: 100%;
-        }
-
+        .card-box { background: var(--card-light); border-radius: 12px; border: 1px solid var(--border-light); padding: clamp(14px, 1.5vw, 24px); width: 100%; }
         .card-title { font-size: clamp(13px, 1.1vw, 17px); font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .chart-container { position: relative; width: 100%; height: 300px; max-width: 100%; }
+        canvas { width: 100% !important; height: 100% !important; object-fit: contain; }
 
-        .chart-container { 
-            position: relative; 
-            width: 100%; 
-            height: 300px;
-            max-width: 100%;
-        }
-
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain;
-        }
-
-        /* SECCIÓN WINNERS TOP 3 */
-        .winners-section-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .winner-card {
-            background: var(--card-light);
-            border-radius: 12px;
-            border: 1px solid var(--border-light);
-            padding: 16px;
-            position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .winner-badge-rank {
-            width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: 900; color: white; flex-shrink: 0;
-        }
-
-        .rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); }
-        .rank-3 { background: linear-gradient(135deg, #d97706, #78350f); }
-
+        .winners-section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .winner-card { background: var(--card-light); border-radius: 12px; border: 1px solid var(--border-light); padding: 16px; display: flex; align-items: center; gap: 14px; }
+        .winner-badge-rank { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: white; flex-shrink: 0; }
+        .rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); } .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); } .rank-3 { background: linear-gradient(135deg, #d97706, #78350f); }
         .winner-details h4 { font-size: 15px; font-weight: 800; color: var(--text-dark); }
         .winner-details p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .winner-stats { margin-left: auto; text-align: right; } .winner-stats .units { font-size: 18px; font-weight: 800; color: var(--cyan-bright); }
 
-        .winner-stats { margin-left: auto; text-align: right; }
-        .winner-stats .units { font-size: 18px; font-weight: 800; color: var(--cyan-bright); }
-        .winner-stats .share { font-size: 11px; font-weight: 700; color: var(--text-muted); }
-
-        .table-responsive { 
-            overflow-x: auto; 
-            border-radius: 8px; 
-            border: 1px solid var(--border-light); 
-            -webkit-overflow-scrolling: touch;
-            width: 100%;
-        }
-
-        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; min-width: 600px; }
-
-        th { background: linear-gradient(90deg, #0f2537, #1e4976); color: white; padding: 10px 14px; font-weight: 600; white-space: nowrap; }
-
-        td { padding: 10px 14px; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
-
+        .table-responsive { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border-light); width: 100%; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; min-width: 650px; }
+        th { background: linear-gradient(90deg, #0f2537, #1e4976); color: white; padding: 12px 14px; font-weight: 600; white-space: nowrap; }
+        td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
         tr:hover { background: rgba(0, 180, 216, 0.04); }
 
-        .tag-status { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
-        .tag-good { background: #d1fae5; color: #047857; }
-        .tag-bad { background: #fee2e2; color: #b91c1c; }
-        .tag-warn { background: #fef3c7; color: #b45309; }
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+        .tag-status { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+        .badge-success, .tag-good { background: var(--badge-success-bg); color: var(--badge-success-text); }
+        .badge-danger, .tag-bad { background: var(--badge-danger-bg); color: var(--badge-danger-text); }
+        .badge-warning, .tag-warn { background: var(--badge-warning-bg); color: var(--badge-warning-text); }
+        .badge-neutral, .tag-neutral { background: var(--badge-neutral-bg); color: var(--badge-neutral-text); }
 
         footer { text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 12px; }
     </style>
@@ -545,7 +191,7 @@
         <div class="header-container">
             <div class="brand-info">
                 <div class="brand-title-wrap">
-                <img src="Logo_Alfalion.png" alt="Alfalion Logo" class="brand-logo">
+                    <img src="Logo_Alfalion.png" alt="Alfalion Logo" class="brand-logo" onerror="this.style.display='none'">
                     <div>
                         <h1>ALFALION INVESTMENT</h1>
                         <p>DASHBOARD EJECUTIVO DE ALMACÉN Y PEDIDOS</p>
@@ -555,39 +201,37 @@
 
             <div class="header-tools">
                 <button class="btn-action" onclick="toggleFullScreen()"><i class="fa-solid fa-expand"></i> Pantalla Completa</button>
-                <button class="btn-action btn-excel" onclick="exportFullWorkbookXLSX()"><i class="fa-solid fa-file-excel"></i> Exportar Libro Excel (.XLSX)</button>
-                <button class="btn-action" onclick="toggleTheme()"><i class="fa-solid fa-moon"></i> Modo Oscuro</button>
+                <button class="btn-action btn-excel" onclick="exportFullWorkbookXLSX()"><i class="fa-solid fa-file-excel"></i> Exportar Libro Excel</button>
+                <button class="btn-action" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i> Cambiar Tema</button>
                 <button class="btn-action" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> Exportar PDF</button>
             </div>
         </div>
 
         <div class="page-tabs-bar">
             <div class="tabs-container">
-                <button class="tab-btn active" onclick="switchPage('page1', this)">
-                    <i class="fa-solid fa-warehouse"></i> Página 1: Almacén (Abril - Mayo)
-                </button>
-                <button class="tab-btn" onclick="switchPage('page2', this)">
-                    <i class="fa-solid fa-truck-ramp-box"></i> Página 2: Reporte Pedidos (Mayo - Junio)
-                </button>
+                <button class="tab-btn active" onclick="switchPage('page1', this)"><i class="fa-solid fa-warehouse"></i> Página 1: Abr - May</button>
+                <button class="tab-btn" onclick="switchPage('page2', this)"><i class="fa-solid fa-truck-ramp-box"></i> Página 2: May - Jun</button>
+                <button class="tab-btn" onclick="switchPage('page3', this)"><i class="fa-solid fa-chart-area"></i> Página 3: Jun - Jul</button>
+                <button class="tab-btn" onclick="switchPage('page4', this)" style="color:#00b4d8; border-color:#00b4d8;"><i class="fa-solid fa-chart-line"></i> Pág 4: Comparativa 4 Meses</button>
             </div>
         </div>
     </header>
 
-    <!-- ================= PÁGINA 1: ALMACÉN (ABRIL VS MAYO) ================= -->
+    <!-- ================= PÁGINA 1: ABRIL - MAYO ================= -->
     <div id="page1" class="page-content active">
         <div class="toolbar">
             <div class="toolbar-title">
                 <i class="fa-solid fa-boxes-packing" style="color:var(--cyan-bright);"></i>
                 <span>Presentación de Almacén: Análisis Abril vs Mayo</span>
             </div>
-
             <div class="toolbar-controls">
                 <div class="search-box-wrap">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" class="global-search-input" id="searchGlobal1" placeholder="🔍 Buscar producto, tienda o KPI..." onkeyup="executeGlobalSearch(1)">
+                    <input type="text" class="global-search-input" id="searchGlobal1" placeholder="Buscar producto..." onkeyup="executeGlobalSearch(1)">
                     <button class="search-clear-btn" id="btnClear1" onclick="clearSearch(1)"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <span class="search-results-badge" id="badgeSearch1">0 resultados</span>
+                <button class="btn-action btn-excel" onclick="exportTableToCSV('tableP1', 'Variacion_Abril_Mayo.csv')"><i class="fa-solid fa-file-csv"></i> CSV</button>
             </div>
         </div>
 
@@ -597,7 +241,7 @@
                 <div class="insights-list">
                     <div class="insight-pill pill-green"><i class="fa-solid fa-circle-check"></i> Tasa de Entrega Subió a 77.89% (+3.8 pp)</div>
                     <div class="insight-pill pill-blue"><i class="fa-solid fa-trophy"></i> Golden Lure Líder con 610 Unidades (69%)</div>
-                    <div class="insight-pill pill-red"><i class="fa-solid fa-arrow-down"></i> Volumen General Cayo -19% vs Abril</div>
+                    <div class="insight-pill pill-red"><i class="fa-solid fa-arrow-down"></i> Volumen General Cayó -19% vs Abril</div>
                 </div>
             </div>
 
@@ -605,79 +249,51 @@
                 <div class="kpi-card search-target">
                     <div class="kpi-head"><span>Total Pedidos (Mayo)</span><div class="kpi-icon"><i class="fa-solid fa-clipboard-list"></i></div></div>
                     <div class="kpi-val count-up" data-target="665">0</div>
-                    <div class="kpi-foot"><span class="text-red"><i class="fa-solid fa-arrow-down"></i> -22%</span> vs Abril (853) [-188 ped]</div>
+                    <div class="kpi-foot"><span class="text-red"><i class="fa-solid fa-arrow-down"></i> -22%</span> vs Abril (853)</div>
                 </div>
-
                 <div class="kpi-card search-target">
                     <div class="kpi-head"><span>Total Unidades (Mayo)</span><div class="kpi-icon"><i class="fa-solid fa-boxes-stacked"></i></div></div>
                     <div class="kpi-val count-up" data-target="883">0</div>
-                    <div class="kpi-foot"><span class="text-red"><i class="fa-solid fa-arrow-down"></i> -19%</span> vs Abril (1,090) [-207 unid]</div>
+                    <div class="kpi-foot"><span class="text-red"><i class="fa-solid fa-arrow-down"></i> -19%</span> vs Abril (1,090)</div>
                 </div>
-
                 <div class="kpi-card search-target">
                     <div class="kpi-head"><span>Tasa de Entrega (Mayo)</span><div class="kpi-icon"><i class="fa-solid fa-circle-check"></i></div></div>
                     <div class="kpi-val count-up" data-target="77.89" data-is-percent="true">0%</div>
                     <div class="kpi-foot"><span class="text-green"><i class="fa-solid fa-arrow-up"></i> +3.8 pp</span> vs Abril (74.09%)</div>
                 </div>
-
                 <div class="kpi-card search-target">
                     <div class="kpi-head"><span>Tasa de Rechazo (Mayo)</span><div class="kpi-icon"><i class="fa-solid fa-circle-xmark"></i></div></div>
                     <div class="kpi-val count-up" data-target="22.11" data-is-percent="true">0%</div>
-                    <div class="kpi-foot"><span class="text-green"><i class="fa-solid fa-arrow-down"></i> -3.8 pp</span> Mejora vs Abril (25.91%)</div>
+                    <div class="kpi-foot"><span class="text-green"><i class="fa-solid fa-arrow-down"></i> -3.8 pp</span> Mejora vs Abril</div>
                 </div>
             </div>
 
             <div class="dashboard-layout">
                 <div class="card-box col-4">
-                    <div class="card-title"><i class="fa-solid fa-chart-pie" style="color:var(--cyan-bright);"></i> Distribución de Pedidos (Abril vs Mayo)</div>
+                    <div class="card-title"><i class="fa-solid fa-chart-pie" style="color:var(--cyan-bright);"></i> Distribución de Pedidos</div>
                     <div class="chart-container"><canvas id="chartP1Pie"></canvas></div>
                 </div>
 
                 <div class="card-box col-8">
-                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                        <span><i class="fa-solid fa-chart-column" style="color:var(--green);"></i> Eficiencia de Entregas vs Rechazos (%)</span>
+                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><i class="fa-solid fa-chart-column" style="color:var(--green);"></i> Eficiencia de Entregas vs Rechazos</span>
                         <div class="toggle-pills">
-                            <button class="btn-pill active" id="btnModeStacked" onclick="toggleRatesView('stacked')">Barras 100%</button>
-                            <button class="btn-pill" id="btnModeGrouped" onclick="toggleRatesView('grouped')">Comparativo Mes</button>
+                            <button class="btn-pill active" id="btnModeStacked" onclick="toggleRatesView('stacked')">100%</button>
+                            <button class="btn-pill" id="btnModeGrouped" onclick="toggleRatesView('grouped')">Comparativo</button>
                         </div>
                     </div>
-                    
-                    <div style="background: rgba(16, 185, 129, 0.08); border-left: 4px solid var(--green); padding: 10px 14px; border-radius: 6px; font-size: 12px; margin-bottom: 12px; color: var(--text-dark);" class="search-target">
-                        <b>💡 Conclusión para Explicar:</b> En <b>Mayo</b> la tasa de entregas aumentó a <b>77.89%</b> (+3.8 pp), logrando reducir los rechazos a un <b>22.11%</b> frente al 25.91% de Abril.
-                    </div>
-
                     <div class="chart-container"><canvas id="chartP1Rates"></canvas></div>
                 </div>
 
-                <div class="card-box col-6">
-                    <div class="card-title"><i class="fa-solid fa-trophy" style="color:var(--orange);"></i> Winner #1: Golden Lure (Unidades)</div>
-                    <div class="chart-container"><canvas id="chartP1Winner"></canvas></div>
-                </div>
-
-                <div class="card-box col-6">
-                    <div class="card-title"><i class="fa-solid fa-store" style="color:var(--cyan-bright);"></i> Pedidos por Tienda (Mayo)</div>
-                    <div class="chart-container"><canvas id="chartP1Stores"></canvas></div>
-                </div>
-
-                <!-- SECCIÓN SOLISO & STARHOME -->
                 <div class="card-box col-12">
-                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-                        <span><i class="fa-solid fa-sun" style="color:var(--orange);"></i> Comparativa de Salidas: Familia SOLISO (Oxitron) - Abril vs Mayo</span>
-                        <button class="btn-action btn-excel" onclick="exportTableToXLSX('solisoTable', 'Salidas_Soliso.xlsx')"><i class="fa-solid fa-file-excel"></i> Exportar Soliso .XLSX</button>
+                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><i class="fa-solid fa-sun" style="color:var(--orange);"></i> Salidas SOLISO (Oxitron) - Abril vs Mayo</span>
+                        <button class="btn-action btn-excel" onclick="exportTableToXLSX('solisoTable', 'Soliso.xlsx')">Exportar</button>
                     </div>
                     <div class="table-responsive">
                         <table id="solisoTable">
                             <thead>
-                                <tr>
-                                    <th>Mes</th>
-                                    <th>Producto</th>
-                                    <th>Pedidos Entregados</th>
-                                    <th>Unidades Entregadas</th>
-                                    <th>Pedidos Rechazados</th>
-                                    <th>Unidades Rechazadas</th>
-                                    <th>Total Pedidos</th>
-                                    <th>Envíos Shalom</th>
-                                </tr>
+                                <tr><th>Mes</th><th>Producto</th><th>Ped. Entregados</th><th>Unid. Entregadas</th><th>Ped. Rechazados</th><th>Unid. Rechazadas</th><th>Total Pedidos</th><th>Envíos Shalom</th></tr>
                             </thead>
                             <tbody>
                                 <tr class="search-target"><td>Abril</td><td>OXITRON GRIS</td><td>201</td><td>381</td><td>26</td><td>54</td><td>227</td><td>158</td></tr>
@@ -696,23 +312,14 @@
                 </div>
 
                 <div class="card-box col-12">
-                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-                        <span><i class="fa-solid fa-star" style="color:var(--orange);"></i> Comparativa de Salidas: Familia STARHOME (Diamantex, Dark Max) - Abril vs Mayo</span>
-                        <button class="btn-action btn-excel" onclick="exportTableToXLSX('starhomeTable', 'Salidas_Starhome.xlsx')"><i class="fa-solid fa-file-excel"></i> Exportar Starhome .XLSX</button>
+                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><i class="fa-solid fa-star" style="color:var(--orange);"></i> Salidas STARHOME - Abril vs Mayo</span>
+                        <button class="btn-action btn-excel" onclick="exportTableToXLSX('starhomeTable', 'Starhome.xlsx')">Exportar</button>
                     </div>
                     <div class="table-responsive">
                         <table id="starhomeTable">
                             <thead>
-                                <tr>
-                                    <th>Mes</th>
-                                    <th>Producto</th>
-                                    <th>Pedidos Entregados</th>
-                                    <th>Unidades Entregadas</th>
-                                    <th>Pedidos Rechazados</th>
-                                    <th>Unidades Rechazadas</th>
-                                    <th>Total Pedidos</th>
-                                    <th>Envíos Shalom</th>
-                                </tr>
+                                <tr><th>Mes</th><th>Producto</th><th>Ped. Entregados</th><th>Unid. Entregadas</th><th>Ped. Rechazados</th><th>Unid. Rechazadas</th><th>Total Pedidos</th><th>Envíos Shalom</th></tr>
                             </thead>
                             <tbody>
                                 <tr class="search-target"><td>Abril</td><td>DIAMANTEX</td><td>367</td><td>720</td><td>89</td><td>156</td><td>456</td><td>329</td></tr>
@@ -725,269 +332,312 @@
                         </table>
                     </div>
                 </div>
-
-                <div class="card-box col-12">
-                    <div class="card-title"><i class="fa-solid fa-crown" style="color:var(--orange);"></i> Winners del Mes (Top 3 Productos en Mayo)</div>
-                    
-                    <div class="winners-section-grid">
-                        <div class="winner-card search-target">
-                            <div class="winner-badge-rank rank-1">1°</div>
-                            <div class="winner-details">
-                                <h4>GOLDEN LURE</h4>
-                                <p>362 Pedidos | 610 Unidades</p>
-                            </div>
-                            <div class="winner-stats">
-                                <div class="units">610 Unid</div>
-                                <div class="share">69% del Total</div>
-                            </div>
-                        </div>
-
-                        <div class="winner-card search-target">
-                            <div class="winner-badge-rank rank-2">2°</div>
-                            <div class="winner-details">
-                                <h4>OUHOE</h4>
-                                <p>40 Pedidos | 83 Unidades</p>
-                            </div>
-                            <div class="winner-stats">
-                                <div class="units" style="color:var(--green);">+261%</div>
-                                <div class="share">9% del Total</div>
-                            </div>
-                        </div>
-
-                        <div class="winner-card search-target">
-                            <div class="winner-badge-rank rank-3">3°</div>
-                            <div class="winner-details">
-                                <h4>SOLUBRIL</h4>
-                                <p>33 Pedidos | 59 Unidades</p>
-                            </div>
-                            <div class="winner-stats">
-                                <div class="units" style="color:var(--green);">+11%</div>
-                                <div class="share">7% del Total</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-top:20px;">
-                        <span><i class="fa-solid fa-arrow-trend-up" style="color:var(--cyan-bright);"></i> Matriz de Variación Intermensual de Productos (Abril vs Mayo)</span>
-                        <button class="btn-action btn-excel" onclick="exportTableToXLSX('tableP1', 'Variacion_Productos_Abril_Mayo.xlsx')"><i class="fa-solid fa-file-excel"></i> Exportar Variaciones .XLSX</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="tableP1">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Unid. Abril</th>
-                                    <th>Unid. Mayo</th>
-                                    <th>Diferencia</th>
-                                    <th>Var. Unidades (%)</th>
-                                    <th>% Cuota Abril</th>
-                                    <th>% Cuota Mayo</th>
-                                    <th>Estado KPI</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="search-target"><td><b>GOLDEN LURE</b></td><td>704</td><td>610</td><td class="text-red">-94</td><td class="text-red">-13%</td><td>65%</td><td>69%</td><td><span class="tag-status tag-good">Winner Principal</span></td></tr>
-                                <tr class="search-target"><td><b>OUHOE</b></td><td>23</td><td>83</td><td class="text-green">+60</td><td class="text-green">+261%</td><td>2%</td><td>9%</td><td><span class="tag-status tag-good">Alto Crecimiento</span></td></tr>
-                                <tr class="search-target"><td><b>SOLUBRIL</b></td><td>53</td><td>59</td><td class="text-green">+6</td><td class="text-green">+11%</td><td>5%</td><td>7%</td><td><span class="tag-status tag-good">Crecimiento Constante</span></td></tr>
-                                <tr class="search-target"><td><b>ARTISTRY</b></td><td>98</td><td>15</td><td class="text-red">-83</td><td class="text-red">-85%</td><td>9%</td><td>2%</td><td><span class="tag-status tag-bad">Caída Temporal</span></td></tr>
-                                <tr class="search-target"><td><b>TIRANIDOS</b></td><td>107</td><td>0</td><td class="text-red">-107</td><td class="text-red">-100%</td><td>10%</td><td>0%</td><td><span class="tag-status tag-warn">Sin Movimiento</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
 
-    <!-- ================= PÁGINA 2: REPORTE DE PEDIDOS (MAYO VS JUNIO) ================= -->
+    <!-- ================= PÁGINA 2: MAYO - JUNIO ================= -->
     <div id="page2" class="page-content">
         <div class="toolbar">
-            <div class="toolbar-title">
-                <i class="fa-solid fa-chart-line" style="color:var(--cyan-bright);"></i>
-                <span>Reporte de Pedidos: Comparativo Mayo y Junio</span>
-            </div>
-
+            <div class="toolbar-title"><i class="fa-solid fa-chart-line" style="color:var(--cyan-bright);"></i> Reporte de Pedidos: Mayo vs Junio</div>
             <div class="toolbar-controls">
                 <select class="select-custom" id="brandFilterP2" onchange="updateDashboardP2()">
                     <option value="ALL">Todas las Marcas</option>
-                    <option value="SOLISO">SOLISO (Oxitron)</option>
-                    <option value="STARHOME">STARHOME (Diamantex)</option>
+                    <option value="SOLISO">SOLISO</option>
+                    <option value="STARHOME">STARHOME</option>
                     <option value="ALICLICK">ALICLICK</option>
                 </select>
-
                 <div class="search-box-wrap">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" class="global-search-input" id="searchGlobal2" placeholder="🔍 Buscar producto, marca o KPI..." onkeyup="executeGlobalSearch(2)">
+                    <input type="text" class="global-search-input" id="searchGlobal2" placeholder="Buscar..." onkeyup="executeGlobalSearch(2)">
                     <button class="search-clear-btn" id="btnClear2" onclick="clearSearch(2)"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <span class="search-results-badge" id="badgeSearch2">0 resultados</span>
-
                 <div class="toggle-pills">
                     <button class="btn-pill active" onclick="changeMetricP2('unidades', this)">Unidades</button>
-                    <button class="btn-pill" onclick="changeMetricP2('pedidos', this)">Pedidos</button>
-                    <button class="btn-pill" onclick="changeMetricP2('rechazo', this)">% Rechazo</button>
+                    <button class="btn-pill" onclick="changeMetricP2('rechazo', this)">Rechazo</button>
                 </div>
             </div>
         </div>
 
         <div class="container" id="containerP2">
-            <!-- BANNER DE DIAGNÓSTICO PÁGINA 2 -->
             <div class="insights-banner">
-                <div class="insights-title"><i class="fa-solid fa-bolt"></i> Resumen Operativo Junio:</div>
+                <div class="insights-title"><i class="fa-solid fa-bolt"></i> Resumen Junio:</div>
                 <div class="insights-list">
-                    <div class="insight-pill pill-green"><i class="fa-solid fa-arrow-trend-up"></i> Fem Vita Despega +1,350% (87 Unid)</div>
-                    <div class="insight-pill pill-blue"><i class="fa-solid fa-shield-halved"></i> Diamantex Mantiene Cuota Firme (-0.4%)</div>
-                    <div class="insight-pill pill-red"><i class="fa-solid fa-triangle-exclamation"></i> Watita Bonita Alerta Rechazo (53.8%)</div>
+                    <div class="insight-pill pill-green"><i class="fa-solid fa-arrow-trend-up"></i> Fem Vita Despega +1,350%</div>
+                    <div class="insight-pill pill-blue"><i class="fa-solid fa-shield-halved"></i> Diamantex Firme</div>
+                    <div class="insight-pill pill-red"><i class="fa-solid fa-triangle-exclamation"></i> Watita Alerta Rechazo</div>
+                </div>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-card search-target">
+                    <div class="kpi-head"><span>Unid. Entregadas</span><div class="kpi-icon"><i class="fa-solid fa-box-open"></i></div></div>
+                    <div class="kpi-val count-up" id="kpiUnidP2" data-target="1774">0</div>
+                    <div class="kpi-foot"><span class="text-red">-22.4%</span> vs Mayo</div>
+                </div>
+                <div class="kpi-card search-target">
+                    <div class="kpi-head"><span>Ped. Entregados</span><div class="kpi-icon"><i class="fa-solid fa-truck"></i></div></div>
+                    <div class="kpi-val count-up" id="kpiPedP2" data-target="986">0</div>
+                    <div class="kpi-foot"><span class="text-red">-20.9%</span> vs Mayo</div>
+                </div>
+                <div class="kpi-card search-target">
+                    <div class="kpi-head"><span>% Rechazo Global</span><div class="kpi-icon"><i class="fa-solid fa-ban"></i></div></div>
+                    <div class="kpi-val count-up" id="kpiRechP2" data-target="15.1" data-is-percent="true">0%</div>
+                    <div class="kpi-foot"><span class="text-green">-1.1 pp</span> Mejora</div>
+                </div>
+                <div class="kpi-card search-target">
+                    <div class="kpi-head"><span>Envíos Shalom</span><div class="kpi-icon"><i class="fa-solid fa-paper-plane"></i></div></div>
+                    <div class="kpi-val count-up" id="kpiShalomP2" data-target="1059">0</div>
+                    <div class="kpi-foot"><span class="text-green">+2.1%</span> vs Mayo</div>
+                </div>
+            </div>
+
+            <div class="dashboard-layout">
+                <div class="card-box col-8">
+                    <div class="card-title"><span id="chart1TitleP2">Unidades Entregadas por Marca</span></div>
+                    <div class="chart-container"><canvas id="chartMainP2"></canvas></div>
+                </div>
+                <div class="card-box col-4">
+                    <div class="card-title">Distribución Rechazos (%)</div>
+                    <div class="chart-container"><canvas id="chartDonutP2"></canvas></div>
+                </div>
+                <div class="card-box col-12">
+                    <div class="card-title" style="display:flex; justify-content:space-between;">
+                        <span>Matriz Consolidada de Pedidos (Junio)</span>
+                        <button class="btn-action btn-excel" onclick="exportTableToXLSX('mainTableP2', 'Matriz_Junio.xlsx')">Exportar</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="mainTableP2">
+                            <thead>
+                                <tr><th>Familia</th><th>Producto</th><th>Unid. Mayo</th><th>Unid. Junio</th><th>Var %</th><th>% Rechazo Mayo</th><th>% Rechazo Junio</th><th>Estado KPI</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON GRIS</td><td>521</td><td>297</td><td class="text-red">-42.9%</td><td>17.4%</td><td>16.1%</td><td><span class="status-badge badge-success">Mejora Rechazo</span></td></tr>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON NEGRO</td><td>304</td><td>208</td><td class="text-red">-31.6%</td><td>17.8%</td><td>16.0%</td><td><span class="status-badge badge-success">Mejora Rechazo</span></td></tr>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON BLANCO</td><td>187</td><td>105</td><td class="text-red">-43.9%</td><td>15.7%</td><td>13.3%</td><td><span class="status-badge badge-success">Mejora Rechazo</span></td></tr>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON AZUL</td><td>161</td><td>98</td><td class="text-red">-39.1%</td><td>19.4%</td><td>9.1%</td><td><span class="status-badge badge-success">Bajo Rechazo</span></td></tr>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON ROJO</td><td>56</td><td>52</td><td class="text-red">-7.1%</td><td>29.6%</td><td>8.9%</td><td><span class="status-badge badge-success">Excelente Mejora</span></td></tr>
+                                <tr data-brand="STARHOME" class="search-target"><td>STARHOME</td><td>DIAMANTEX</td><td>930</td><td>926</td><td class="text-muted">-0.4%</td><td>13.9%</td><td>15.9%</td><td><span class="status-badge badge-neutral">Alta Demanda</span></td></tr>
+                                <tr data-brand="STARHOME" class="search-target"><td>STARHOME</td><td>DARK MAX</td><td>128</td><td>88</td><td class="text-red">-31.3%</td><td>12.3%</td><td>15.6%</td><td><span class="status-badge badge-neutral">Estable</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>GOLDEN LURE</td><td>610</td><td>500</td><td class="text-red">-18.0%</td><td>24.3%</td><td>22.4%</td><td><span class="status-badge badge-danger">Rechazo Elevado</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>ARTISTRY</td><td>15</td><td>118</td><td class="text-green">+686.7%</td><td>7.7%</td><td>14.4%</td><td><span class="status-badge badge-success">Crecimiento Alto</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>FEM VITA</td><td>6</td><td>87</td><td class="text-green">+1350%</td><td>28.6%</td><td>1.6%</td><td><span class="status-badge badge-success">Excelente KPI</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>OUHOE</td><td>83</td><td>85</td><td class="text-green">+2.4%</td><td>31.0%</td><td>17.0%</td><td><span class="status-badge badge-success">Mejora Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>EVIL GOODS</td><td>0</td><td>36</td><td class="text-green">+100%</td><td>0.0%</td><td>35.7%</td><td><span class="status-badge badge-danger">Alerta Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>INFIBELLA</td><td>12</td><td>25</td><td class="text-green">+108.3%</td><td>7.7%</td><td>22.2%</td><td><span class="status-badge badge-warning">Moderado</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>MEDINAIL</td><td>26</td><td>22</td><td class="text-red">-15.4%</td><td>17.6%</td><td>12.5%</td><td><span class="status-badge badge-success">Bajo Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>SOLUBRIL</td><td>59</td><td>15</td><td class="text-red">-74.6%</td><td>5.7%</td><td>0.0%</td><td><span class="status-badge badge-success">0% Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>WATITA BONITA</td><td>5</td><td>8</td><td class="text-green">+60.0%</td><td>0.0%</td><td>53.8%</td><td><span class="status-badge badge-danger">Alerta Rechazo</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= PÁGINA 3: JUNIO VS JULIO (CON ALICLICK) ================= -->
+    <div id="page3" class="page-content">
+        <div class="toolbar">
+            <div class="toolbar-title"><i class="fa-solid fa-chart-area" style="color:var(--cyan-bright);"></i> Reporte de Pedidos: Junio vs Julio</div>
+            <div class="toolbar-controls">
+                <select class="select-custom" id="brandFilterP3" onchange="updateDashboardP3()">
+                    <option value="ALL">Todas las Marcas</option>
+                    <option value="SOLISO">SOLISO</option>
+                    <option value="STARHOME">STARHOME</option>
+                    <option value="ALICLICK">ALICLICK</option>
+                </select>
+                <div class="search-box-wrap">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="global-search-input" id="searchGlobal3" placeholder="Buscar..." onkeyup="executeGlobalSearch(3)">
+                    <button class="search-clear-btn" id="btnClear3" onclick="clearSearch(3)"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="toggle-pills">
+                    <button class="btn-pill active" onclick="changeMetricP3('unidades', this)">Unidades</button>
+                    <button class="btn-pill" onclick="changeMetricP3('pedidos', this)">Pedidos</button>
+                    <button class="btn-pill" onclick="changeMetricP3('rechazo', this)">% Rechazo</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="containerP3">
+            <div class="insights-banner">
+                <div class="insights-title"><i class="fa-solid fa-bolt"></i> Resumen Julio:</div>
+                <div class="insights-list">
+                    <div class="insight-pill pill-green"><i class="fa-solid fa-arrow-trend-up"></i> FEM VITA lidera crecimiento (+129.9%, 200 Unid)</div>
+                    <div class="insight-pill pill-blue"><i class="fa-solid fa-shield-halved"></i> Diamantex Firme Líder (818 Unid)</div>
+                    <div class="insight-pill pill-green"><i class="fa-solid fa-check-double"></i> Rechazo Global Baja al 14.2%</div>
                 </div>
             </div>
 
             <div class="kpi-grid">
                 <div class="kpi-card search-target">
                     <div class="kpi-head"><span>Unidades Entregadas</span><div class="kpi-icon"><i class="fa-solid fa-box-open"></i></div></div>
-                    <div class="kpi-val count-up" id="kpiUnidP2" data-target="1774">0</div>
-                    <div class="kpi-foot"><span class="text-red"><i class="fa-solid fa-arrow-down"></i> -22.4%</span> vs Mayo (2,287)</div>
+                    <div class="kpi-val count-up" id="kpiUnidP3" data-target="2230">0</div>
+                    <div class="kpi-foot"><span class="text-green">+25.7%</span> vs Junio (1,774)</div>
                 </div>
-
                 <div class="kpi-card search-target">
                     <div class="kpi-head"><span>Pedidos Entregados</span><div class="kpi-icon"><i class="fa-solid fa-truck"></i></div></div>
-                    <div class="kpi-val count-up" id="kpiPedP2" data-target="986">0</div>
-                    <div class="kpi-foot"><span class="text-red"><i class="fa-solid fa-arrow-down"></i> -20.9%</span> vs Mayo (1,246)</div>
+                    <div class="kpi-val count-up" id="kpiPedP3" data-target="1228">0</div>
+                    <div class="kpi-foot"><span class="text-green">+24.5%</span> vs Junio (986)</div>
                 </div>
-
                 <div class="kpi-card search-target">
                     <div class="kpi-head"><span>% Rechazo Global</span><div class="kpi-icon"><i class="fa-solid fa-ban"></i></div></div>
-                    <div class="kpi-val count-up" id="kpiRechP2" data-target="15.1" data-is-percent="true">0%</div>
-                    <div class="kpi-foot"><span class="text-green"><i class="fa-solid fa-arrow-down"></i> -1.1 pp</span> Mejora vs Mayo (16.2%)</div>
+                    <div class="kpi-val count-up" id="kpiRechP3" data-target="14.2" data-is-percent="true">0%</div>
+                    <div class="kpi-foot"><span class="text-green">-0.9 pp</span> Mejora vs Junio (15.1%)</div>
                 </div>
-
                 <div class="kpi-card search-target">
                     <div class="kpi-head"><span>Total Envíos Shalom</span><div class="kpi-icon"><i class="fa-solid fa-paper-plane"></i></div></div>
-                    <div class="kpi-val count-up" id="kpiShalomP2" data-target="1059">0</div>
-                    <div class="kpi-foot"><span class="text-green"><i class="fa-solid fa-arrow-up"></i> +2.1%</span> vs Mayo (1,037)</div>
+                    <div class="kpi-val count-up" id="kpiShalomP3" data-target="646">0</div>
+                    <div class="kpi-foot"><span class="text-red">-39.0%</span> vs Junio (1,059)</div>
                 </div>
             </div>
 
             <div class="dashboard-layout">
                 <div class="card-box col-8">
-                    <div class="card-title"><i class="fa-solid fa-chart-column" style="color:var(--cyan-bright);"></i> <span id="chart1TitleP2">Comparativo de Unidades Entregadas por Marca</span></div>
-                    <div class="chart-container"><canvas id="chartMainP2"></canvas></div>
+                    <div class="card-title"><span id="chart1TitleP3">Unidades Entregadas por Marca (Junio vs Julio)</span></div>
+                    <div class="chart-container"><canvas id="chartMainP3"></canvas></div>
                 </div>
-
                 <div class="card-box col-4">
-                    <div class="card-title"><i class="fa-solid fa-chart-pie" style="color:var(--red);"></i> Distribución de Rechazos (%)</div>
-                    <div class="chart-container"><canvas id="chartDonutP2"></canvas></div>
+                    <div class="card-title">Distribución Rechazos (%) - Julio</div>
+                    <div class="chart-container"><canvas id="chartDonutP3"></canvas></div>
                 </div>
-
-                <div class="card-box col-6">
-                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                        <span><i class="fa-solid fa-chart-line" style="color:var(--cyan-bright);"></i> Comparativa por Producto (Mayo vs Junio)</span>
-                        <select class="select-custom" id="lineProductSelect" onchange="updateLineProductChart()" style="padding:4px 8px; font-size:12px;">
-                            <option value="ALL">Ver Todos los Clave</option>
-                            <option value="GOLDEN LURE">GOLDEN LURE</option>
+                
+                <div class="card-box col-12">
+                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>Comparativa Top Productos (Junio vs Julio)</span>
+                        <select class="select-custom" id="lineProductSelectP3" onchange="updateLineProductChartP3()">
+                            <option value="ALL">Ver Top Productos Clave</option>
                             <option value="DIAMANTEX">DIAMANTEX</option>
-                            <option value="OXITRON GRIS">OXITRON GRIS</option>
-                            <option value="OXITRON NEGRO">OXITRON NEGRO</option>
-                            <option value="ARTISTRY">ARTISTRY</option>
+                            <option value="GOLDEN LURE">GOLDEN LURE</option>
                             <option value="FEM VITA">FEM VITA</option>
-                            <option value="OUHOE">OUHOE</option>
+                            <option value="ARTISTRY">ARTISTRY</option>
+                            <option value="OXITRON GRIS">OXITRON GRIS</option>
                         </select>
                     </div>
-                    <div class="chart-container"><canvas id="chartLineP2"></canvas></div>
-                </div>
-
-                <div class="card-box col-6">
-                    <div class="card-title"><i class="fa-solid fa-boxes-stacked" style="color:var(--orange);"></i> Desglose Envíos Shalom (Mayo vs Junio)</div>
-                    <div class="chart-container"><canvas id="chartShalomP2"></canvas></div>
+                    <div class="chart-container"><canvas id="chartLineP3"></canvas></div>
                 </div>
 
                 <div class="card-box col-12">
-                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-                        <span><i class="fa-solid fa-list-check" style="color:var(--cyan-bright);"></i> Matriz Consolidada del Reporte de Pedidos (Junio)</span>
-                        <button class="btn-action btn-excel" onclick="exportTableToXLSX('mainTableP2', 'Matriz_Reporte_Pedidos_Junio.xlsx')"><i class="fa-solid fa-file-excel"></i> Exportar Matriz Junio .XLSX</button>
+                    <div class="card-title" style="display:flex; justify-content:space-between;">
+                        <span>Matriz Consolidada Total (Julio)</span>
+                        <button class="btn-action btn-excel" onclick="exportTableToXLSX('mainTableP3', 'Matriz_Julio.xlsx')">Exportar</button>
                     </div>
                     <div class="table-responsive">
-                        <table id="mainTableP2">
+                        <table id="mainTableP3">
                             <thead>
-                                <tr>
-                                    <th>Familia / Marca</th>
-                                    <th>Producto</th>
-                                    <th>Unid. Mayo</th>
-                                    <th>Unid. Junio</th>
-                                    <th>Var % Unidades</th>
-                                    <th>% Rechazo Mayo</th>
-                                    <th>% Rechazo Junio</th>
-                                    <th>Estado KPI</th>
-                                </tr>
+                                <tr><th>Familia</th><th>Producto</th><th>Unid. Junio</th><th>Unid. Julio</th><th>Var %</th><th>% Rechazo Junio</th><th>% Rechazo Julio</th><th>Estado KPI</th></tr>
                             </thead>
                             <tbody>
-                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON GRIS</td><td>521</td><td>297</td><td class="text-red">-42.9%</td><td>17.4%</td><td>16.1%</td><td><span class="tag-status tag-good">Mejora Rechazo</span></td></tr>
-                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON NEGRO</td><td>304</td><td>208</td><td class="text-red">-31.6%</td><td>17.8%</td><td>16.0%</td><td><span class="tag-status tag-good">Mejora Rechazo</span></td></tr>
-                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON BLANCO</td><td>187</td><td>105</td><td class="text-red">-43.9%</td><td>15.7%</td><td>13.3%</td><td><span class="tag-status tag-good">Mejora Rechazo</span></td></tr>
-                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON AZUL</td><td>161</td><td>98</td><td class="text-red">-39.1%</td><td>19.4%</td><td>9.1%</td><td><span class="tag-status tag-good">Bajo Rechazo</span></td></tr>
-                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON ROJO</td><td>56</td><td>52</td><td class="text-red">-7.1%</td><td>29.6%</td><td>8.9%</td><td><span class="tag-status tag-good">Excelente Mejora</span></td></tr>
-                                <tr data-brand="STARHOME" class="search-target"><td>STARHOME</td><td>DIAMANTEX</td><td>930</td><td>926</td><td style="color:var(--text-muted);">-0.4%</td><td>13.9%</td><td>15.9%</td><td><span class="tag-status tag-warn">Alta Demanda</span></td></tr>
-                                <tr data-brand="STARHOME" class="search-target"><td>STARHOME</td><td>DARK MAX</td><td>128</td><td>88</td><td class="text-red">-31.3%</td><td>12.3%</td><td>15.6%</td><td><span class="tag-status tag-warn">Estable</span></td></tr>
-                                <tr data-brand="STARHOME" class="search-target"><td>STARHOME</td><td>PRE CARBON</td><td>0</td><td>0</td><td style="color:var(--text-muted);">0.0%</td><td>0.0%</td><td>0.0%</td><td><span class="tag-status tag-warn">Sin Movimiento</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>GOLDEN LURE</td><td>610</td><td>500</td><td class="text-red">-18.0%</td><td>24.3%</td><td>22.4%</td><td><span class="tag-status tag-bad">Rechazo Elevado</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>ARTISTRY</td><td>15</td><td>118</td><td class="text-green">+686.7%</td><td>7.7%</td><td>14.4%</td><td><span class="tag-status tag-good">Crecimiento Alto</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>FEM VITA</td><td>6</td><td>87</td><td class="text-green">+1350%</td><td>28.6%</td><td>1.6%</td><td><span class="tag-status tag-good">Excelente KPI</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>OUHOE</td><td>83</td><td>85</td><td class="text-green">+2.4%</td><td>31.0%</td><td>17.0%</td><td><span class="tag-status tag-good">Mejora Rechazo</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>EVIL GOODS</td><td>0</td><td>36</td><td class="text-green">+100%</td><td>0.0%</td><td>35.7%</td><td><span class="tag-status tag-bad">Alerta Rechazo</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>INFIBELLA</td><td>12</td><td>25</td><td class="text-green">+108.3%</td><td>7.7%</td><td>22.2%</td><td><span class="tag-status tag-warn">Moderado</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>MEDINAIL</td><td>26</td><td>22</td><td class="text-red">-15.4%</td><td>17.6%</td><td>12.5%</td><td><span class="tag-status tag-good">Bajo Rechazo</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>SOLUBRIL</td><td>59</td><td>15</td><td class="text-red">-74.6%</td><td>5.7%</td><td>0.0%</td><td><span class="tag-status tag-good">0% Rechazo</span></td></tr>
-                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>WATITA BONITA</td><td>5</td><td>8</td><td class="text-green">+60.0%</td><td>0.0%</td><td>53.8%</td><td><span class="tag-status tag-bad">Alerta Rechazo</span></td></tr>
+                                <!-- SOLISO -->
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON GRIS</td><td>297</td><td>227</td><td class="text-red">-23.6%</td><td>16.1%</td><td>11.7%</td><td><span class="tag-status tag-good">Bajo Rechazo</span></td></tr>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON NEGRO</td><td>208</td><td>152</td><td class="text-red">-26.9%</td><td>16.0%</td><td>16.7%</td><td><span class="tag-status tag-warn">Estable</span></td></tr>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON BLANCO</td><td>105</td><td>82</td><td class="text-red">-21.9%</td><td>13.3%</td><td>3.9%</td><td><span class="tag-status tag-good">Excelente KPI</span></td></tr>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON AZUL</td><td>98</td><td>39</td><td class="text-red">-60.2%</td><td>9.1%</td><td>20.7%</td><td><span class="tag-status tag-bad">Alerta Rechazo</span></td></tr>
+                                <tr data-brand="SOLISO" class="search-target"><td>SOLISO</td><td>OXITRON ROJO</td><td>52</td><td>25</td><td class="text-red">-51.9%</td><td>8.9%</td><td>15.8%</td><td><span class="tag-status tag-warn">Estable</span></td></tr>
+                                <!-- STARHOME -->
+                                <tr data-brand="STARHOME" class="search-target"><td>STARHOME</td><td>DIAMANTEX</td><td>926</td><td>818</td><td class="text-red">-11.7%</td><td>15.9%</td><td>16.4%</td><td><span class="tag-status tag-warn">Estable</span></td></tr>
+                                <tr data-brand="STARHOME" class="search-target"><td>STARHOME</td><td>DARK MAX</td><td>88</td><td>66</td><td class="text-red">-25.0%</td><td>15.6%</td><td>16.7%</td><td><span class="tag-status tag-warn">Estable</span></td></tr>
+                                <!-- ALICLICK -->
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>GOLDEN LURE</td><td>500</td><td>407</td><td class="text-red">-18.6%</td><td>22.4%</td><td>14.9%</td><td><span class="tag-status tag-good">Mejora Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>ARTISTRY</td><td>118</td><td>158</td><td class="text-green">+33.9%</td><td>14.4%</td><td>16.8%</td><td><span class="tag-status tag-good">Crecimiento Alto</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>FEM VITA</td><td>87</td><td>200</td><td class="text-green">+129.9%</td><td>1.6%</td><td>4.2%</td><td><span class="tag-status tag-good">Excelente KPI</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>INFIBELLA</td><td>25</td><td>15</td><td class="text-red">-40.0%</td><td>22.2%</td><td>13.3%</td><td><span class="tag-status tag-good">Mejora Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>MEDINAIL</td><td>22</td><td>18</td><td class="text-red">-18.2%</td><td>12.5%</td><td>0.0%</td><td><span class="tag-status tag-good">0% Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>SOLUBRIL</td><td>15</td><td>10</td><td class="text-red">-33.3%</td><td>0.0%</td><td>0.0%</td><td><span class="tag-status tag-good">0% Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>OUHOE</td><td>85</td><td>3</td><td class="text-red">-96.5%</td><td>17.0%</td><td>50.0%</td><td><span class="tag-status tag-bad">Caída Crítica</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>EVIL GOODS</td><td>36</td><td>3</td><td class="text-red">-91.7%</td><td>35.7%</td><td>50.0%</td><td><span class="tag-status tag-bad">Caída Crítica</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>WATITA BONITA</td><td>8</td><td>1</td><td class="text-red">-87.5%</td><td>53.8%</td><td>0.0%</td><td><span class="tag-status tag-warn">Bajo Volumen</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>JAYSUING</td><td>0</td><td>3</td><td class="text-green">Nuevo</td><td>0.0%</td><td>0.0%</td><td><span class="tag-status tag-neutral">Lanzamiento</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>IRON MAX</td><td>0</td><td>2</td><td class="text-green">Nuevo</td><td>0.0%</td><td>60.0%</td><td><span class="tag-status tag-bad">Alerta Rechazo</span></td></tr>
+                                <tr data-brand="ALICLICK" class="search-target"><td>ALICLICK</td><td>NUVELLA</td><td>0</td><td>1</td><td class="text-green">Nuevo</td><td>0.0%</td><td>50.0%</td><td><span class="tag-status tag-warn">Lanzamiento</span></td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- ================= PÁGINA 4: COMPARATIVA 4 MESES ================= -->
+    <div id="page4" class="page-content">
+        <div class="toolbar">
+            <div class="toolbar-title"><i class="fa-solid fa-chart-line" style="color:var(--cyan-bright);"></i> Dashboard Comparativo 4 Meses (Abr - Jul)</div>
+            <div class="toolbar-controls">
+                <button class="btn-action btn-excel" onclick="exportFullWorkbookXLSX()"><i class="fa-solid fa-file-excel"></i> Exportar Historico .XLSX</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="insights-banner">
+                <div class="insights-title"><i class="fa-solid fa-trophy"></i> Tendencia Cuatrimestral (Abril - Julio):</div>
+                <div class="insights-list">
+                    <div class="insight-pill pill-blue"><i class="fa-solid fa-crown"></i> DIAMANTEX y GOLDEN LURE dominan volumen.</div>
+                    <div class="insight-pill pill-green"><i class="fa-solid fa-rocket"></i> FEM VITA es el producto de mayor crecimiento (+129.9% en Julio).</div>
+                </div>
+            </div>
+
+            <div class="dashboard-layout">
+                <div class="card-box col-8">
+                    <div class="card-title">Evolución de Unidades Entregadas (Top Productos)</div>
+                    <div class="chart-container"><canvas id="chartTrend4M"></canvas></div>
+                </div>
+                <div class="card-box col-4">
+                    <div class="card-title">Evolución % Rechazo Global</div>
+                    <div class="chart-container"><canvas id="chartRechazoSoliso4M"></canvas></div>
+                </div>
+                <div class="card-box col-12">
+                    <div class="card-title">Matriz Consolidada Histórica (Top Productos)</div>
+                    <div class="table-responsive">
+                        <table id="table4M">
+                            <thead>
+                                <tr><th>Familia</th><th>Producto</th><th>Abril</th><th>Mayo</th><th>Junio</th><th>Julio</th><th>Var. Jun-Jul</th><th>% Rechazo Jul</th><th>Estado KPI</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>STARHOME</td><td><b>DIAMANTEX</b></td><td>720</td><td>930</td><td>926</td><td><b>818</b></td><td class="text-red">-11.7%</td><td>16.4%</td><td><span class="tag-status tag-good">Líder Absoluto</span></td></tr>
+                                <tr><td>ALICLICK</td><td><b>GOLDEN LURE</b></td><td>704</td><td>610</td><td>500</td><td><b>407</b></td><td class="text-red">-18.6%</td><td>14.9%</td><td><span class="tag-status tag-good">Mejora Rechazo</span></td></tr>
+                                <tr><td>SOLISO</td><td><b>OXITRON GRIS</b></td><td>381</td><td>521</td><td>297</td><td><b>227</b></td><td class="text-red">-23.6%</td><td>11.7%</td><td><span class="tag-status tag-good">Bajo Rechazo</span></td></tr>
+                                <tr><td>ALICLICK</td><td><b>FEM VITA</b></td><td>0</td><td>6</td><td>87</td><td><b>200</b></td><td class="text-green">+129.9%</td><td>4.2%</td><td><span class="tag-status tag-good">Excelente Crec.</span></td></tr>
+                                <tr><td>ALICLICK</td><td><b>ARTISTRY</b></td><td>98</td><td>15</td><td>118</td><td><b>158</b></td><td class="text-green">+33.9%</td><td>16.8%</td><td><span class="tag-status tag-good">Crecimiento Alto</span></td></tr>
+                                <tr><td>SOLISO</td><td><b>OXITRON NEGRO</b></td><td>195</td><td>304</td><td>208</td><td><b>152</b></td><td class="text-red">-26.9%</td><td>16.7%</td><td><span class="tag-status tag-warn">Estable</span></td></tr>
+                                <tr><td>SOLISO</td><td><b>OXITRON BLANCO</b></td><td>112</td><td>187</td><td>105</td><td><b>82</b></td><td class="text-red">-21.9%</td><td>3.9%</td><td><span class="tag-status tag-good">Excelente KPI</span></td></tr>
+                                <tr><td>STARHOME</td><td><b>DARK MAX</b></td><td>96</td><td>128</td><td>88</td><td><b>66</b></td><td class="text-red">-25.0%</td><td>16.7%</td><td><span class="tag-status tag-warn">Estable</span></td></tr>
+                                <tr><td>SOLISO</td><td><b>OXITRON AZUL</b></td><td>91</td><td>161</td><td>98</td><td><b>39</b></td><td class="text-red">-60.2%</td><td>20.7%</td><td><span class="tag-status tag-bad">Alerta Rechazo</span></td></tr>
+                                <tr><td>SOLISO</td><td><b>OXITRON ROJO</b></td><td>48</td><td>56</td><td>52</td><td><b>25</b></td><td class="text-red">-51.9%</td><td>15.8%</td><td><span class="tag-status tag-warn">Estable</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>© 2026 Alfalion Investment — Dashboard Ejecutivo Multi-Pantalla publicado en GitHub Pages</p>
+        <p>© 2026 Alfalion Investment — Dashboard Ejecutivo Multi-Pantalla de Archivo Único</p>
     </footer>
 
+    <!-- ================= SCRIPTS JS INCRUSTADOS AQUÍ ================= -->
     <script>
         Chart.defaults.responsive = true;
         Chart.defaults.maintainAspectRatio = false;
-        Chart.defaults.devicePixelRatio = window.devicePixelRatio || 1;
+        Chart.defaults.color = "#94a3b8";
 
-        function toggleTheme() { document.body.classList.toggle('dark-theme'); }
+        function toggleTheme() { document.body.classList.toggle('light-theme'); }
+        function toggleFullScreen() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
 
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-            }
-        }
-
-        // ANIMACIÓN KPI COUNTER DESDE CERO
         function animateCounters() {
             const activePage = document.querySelector('.page-content.active');
             const counters = activePage.querySelectorAll('.count-up');
-            
             counters.forEach(counter => {
                 const target = parseFloat(counter.getAttribute('data-target'));
                 const isPercent = counter.getAttribute('data-is-percent') === 'true';
-                let start = 0;
-                const duration = 1000;
-                const stepTime = 20;
-                const steps = duration / stepTime;
-                const increment = target / steps;
-
+                let start = 0; const duration = 1000; const stepTime = 20; const steps = duration / stepTime; const increment = target / steps;
                 const timer = setInterval(() => {
                     start += increment;
                     if (start >= target) {
                         counter.innerText = isPercent ? target.toFixed(2) + '%' : Math.round(target).toLocaleString();
                         clearInterval(timer);
-                    } else {
-                        counter.innerText = isPercent ? start.toFixed(1) + '%' : Math.round(start).toLocaleString();
-                    }
+                    } else { counter.innerText = isPercent ? start.toFixed(1) + '%' : Math.round(start).toLocaleString(); }
                 }, stepTime);
             });
         }
@@ -1003,337 +653,190 @@
 
         document.addEventListener('DOMContentLoaded', () => { animateCounters(); });
 
-        // EXPORTADOR EXCEL
-        function exportTableToXLSX(tableId, filename = 'Reporte_Alfalion.xlsx') {
-            const table = document.getElementById(tableId);
-            if (!table) return;
-
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.table_to_sheet(table);
-
-            const colWidths = [];
-            const rows = table.querySelectorAll('tr');
-            rows.forEach(r => {
-                const cols = r.querySelectorAll('th, td');
-                cols.forEach((c, idx) => {
-                    const len = c.innerText.trim().length;
-                    colWidths[idx] = Math.max(colWidths[idx] || 10, len + 3);
-                });
-            });
-            ws['!cols'] = colWidths.map(w => ({ wch: w }));
-
-            XLSX.utils.book_append_sheet(wb, ws, 'Datos');
-            XLSX.writeFile(wb, filename);
+        function exportTableToXLSX(tableId, filename) {
+            const table = document.getElementById(tableId); if (!table) return;
+            const wb = XLSX.utils.book_new(); const ws = XLSX.utils.table_to_sheet(table);
+            XLSX.utils.book_append_sheet(wb, ws, 'Datos'); XLSX.writeFile(wb, filename);
         }
 
         function exportFullWorkbookXLSX() {
             const wb = XLSX.utils.book_new();
+            if(document.getElementById('tableP1')) XLSX.utils.book_append_sheet(wb, XLSX.utils.table_to_sheet(document.getElementById('tableP1')), 'Abril-Mayo');
+            if(document.getElementById('mainTableP2')) XLSX.utils.book_append_sheet(wb, XLSX.utils.table_to_sheet(document.getElementById('mainTableP2')), 'Mayo-Junio');
+            if(document.getElementById('mainTableP3')) XLSX.utils.book_append_sheet(wb, XLSX.utils.table_to_sheet(document.getElementById('mainTableP3')), 'Julio');
+            if(document.getElementById('table4M')) XLSX.utils.book_append_sheet(wb, XLSX.utils.table_to_sheet(document.getElementById('table4M')), 'Historico 4M');
+            XLSX.writeFile(wb, 'Consolidado_Alfalion_4Meses_Completo.xlsx');
+        }
 
-            const table1 = document.getElementById('tableP1');
-            if (table1) {
-                const ws1 = XLSX.utils.table_to_sheet(table1);
-                XLSX.utils.book_append_sheet(wb, ws1, 'Almacén (Abril-Mayo)');
-            }
-
-            const table2 = document.getElementById('mainTableP2');
-            if (table2) {
-                const ws2 = XLSX.utils.table_to_sheet(table2);
-                XLSX.utils.book_append_sheet(wb, ws2, 'Pedidos Junio');
-            }
-
-            XLSX.writeFile(wb, 'Consolidado_Alfalion_Investment_2026.xlsx');
+        function exportTableToCSV(tableId, filename) {
+            const table = document.getElementById(tableId); if (!table) return;
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            Array.from(table.rows).forEach(row => {
+                if (row.style.display !== "none") {
+                    let cols = Array.from(row.cells).map(cell => `"${cell.innerText.replace(/\n/g, ' ').replace(/"/g, '""')}"`);
+                    csvContent += cols.join(",") + "\n";
+                }
+            });
+            const link = document.createElement("a"); link.setAttribute("href", encodeURI(csvContent)); link.setAttribute("download", filename);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         function executeGlobalSearch(pageNum) {
-            const queryInput = document.getElementById(`searchGlobal${pageNum}`);
-            const query = queryInput.value.trim().toLowerCase();
-            const btnClear = document.getElementById(`btnClear${pageNum}`);
-            const badge = document.getElementById(`badgeSearch${pageNum}`);
-            const container = document.getElementById(`containerP${pageNum}`);
-            const targets = container.querySelectorAll('.search-target');
-
-            btnClear.style.display = query.length > 0 ? 'block' : 'none';
-
-            if (query.length === 0) {
-                targets.forEach(el => {
-                    el.style.display = '';
-                    removeHighlights(el);
-                });
-                badge.style.display = 'none';
-                return;
-            }
-
+            const query = document.getElementById(`searchGlobal${pageNum}`).value.trim().toLowerCase();
+            const targets = document.getElementById(`containerP${pageNum}`).querySelectorAll('.search-target');
+            document.getElementById(`btnClear${pageNum}`).style.display = query.length > 0 ? 'block' : 'none';
+            if (query.length === 0) { targets.forEach(el => { el.style.display = ''; removeHighlights(el); }); document.getElementById(`badgeSearch${pageNum}`).style.display = 'none'; return; }
             let matchCount = 0;
-
             targets.forEach(el => {
                 removeHighlights(el);
-                const text = el.innerText.toLowerCase();
-                if (text.includes(query)) {
-                    el.style.display = '';
-                    matchCount++;
-                    applyHighlights(el, query);
-                } else {
-                    if (el.tagName === 'TR') { el.style.display = 'none'; }
-                }
+                if (el.innerText.toLowerCase().includes(query)) { el.style.display = ''; matchCount++; applyHighlights(el, query); }
+                else if (el.tagName === 'TR') { el.style.display = 'none'; }
             });
-
-            badge.innerText = `${matchCount} resultados`;
-            badge.style.display = 'inline-block';
+            const badge = document.getElementById(`badgeSearch${pageNum}`); badge.innerText = `${matchCount} resultados`; badge.style.display = 'inline-block';
         }
-
-        function clearSearch(pageNum) {
-            const queryInput = document.getElementById(`searchGlobal${pageNum}`);
-            queryInput.value = '';
-            executeGlobalSearch(pageNum);
-        }
-
+        function clearSearch(pageNum) { document.getElementById(`searchGlobal${pageNum}`).value = ''; executeGlobalSearch(pageNum); }
         function applyHighlights(element, query) {
-            if (!query) return;
-            const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
-            let node;
-            const nodesToReplace = [];
-
-            while (node = walk.nextNode()) {
-                if (node.parentElement.classList.contains('highlight')) continue;
-                const text = node.nodeValue;
-                if (text.toLowerCase().includes(query)) { nodesToReplace.push(node); }
-            }
-
-            nodesToReplace.forEach(node => {
-                const parent = node.parentNode;
-                const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
-                const span = document.createElement('span');
-                span.innerHTML = node.nodeValue.replace(regex, '<mark class="highlight">$1</mark>');
-                parent.replaceChild(span, node);
-            });
+            const walk = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false); let node; const nodesToReplace = [];
+            while (node = walk.nextNode()) { if (!node.parentElement.classList.contains('highlight') && node.nodeValue.toLowerCase().includes(query)) nodesToReplace.push(node); }
+            nodesToReplace.forEach(node => { const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'); const span = document.createElement('span'); span.innerHTML = node.nodeValue.replace(regex, '<mark class="highlight">$1</mark>'); node.parentNode.replaceChild(span, node); });
         }
+        function removeHighlights(element) { element.querySelectorAll('mark.highlight').forEach(h => { const parent = h.parentNode; parent.replaceChild(document.createTextNode(h.innerText), h); parent.normalize(); }); }
 
-        function removeHighlights(element) {
-            const highlights = element.querySelectorAll('mark.highlight');
-            highlights.forEach(h => {
-                const parent = h.parentNode;
-                parent.replaceChild(document.createTextNode(h.innerText), h);
-                parent.normalize();
-            });
-        }
-
-        function escapeRegExp(string) { return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-
-        // ================= CHARTS PÁGINA 1 =================
-        new Chart(document.getElementById('chartP1Pie').getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Abril (56%)', 'Mayo (44%)'],
-                datasets: [{ data: [853, 665], backgroundColor: ['#1e4976', '#00b4d8'] }]
-            }
-        });
-
+        // Gráficos Pág 1
+        new Chart(document.getElementById('chartP1Pie').getContext('2d'), { type: 'doughnut', data: { labels: ['Abril', 'Mayo'], datasets: [{ data: [853, 665], backgroundColor: ['#1e4976', '#00b4d8'] }] } });
         let chartP1Rates;
-        const ctxP1Rates = document.getElementById('chartP1Rates').getContext('2d');
-
-        function createP1RatesChart(mode = 'stacked') {
+        function createP1RatesChart(mode='stacked') {
             if(chartP1Rates) chartP1Rates.destroy();
+            chartP1Rates = new Chart(document.getElementById('chartP1Rates').getContext('2d'), {
+                type: 'bar',
+                data: mode === 'stacked' 
+                    ? { labels: ['Abr', 'May'], datasets: [{ label: '% Entregados', data: [74.09, 77.89], backgroundColor: '#10b981' }, { label: '% Rechazados', data: [25.91, 22.11], backgroundColor: '#ef4444' }] }
+                    : { labels: ['Tasa Entrega', 'Tasa Rechazo'], datasets: [{ label: 'Abril', data: [74.09, 25.91], backgroundColor: '#1e4976' }, { label: 'Mayo', data: [77.89, 22.11], backgroundColor: '#00b4d8' }] },
+                options: mode === 'stacked' ? { indexAxis: 'y', scales: { x: { stacked: true, max: 100 }, y: { stacked: true } } } : { scales: { y: { max: 100 } } }
+            });
+        }
+        function toggleRatesView(mode) { document.getElementById('btnModeStacked').classList.toggle('active', mode==='stacked'); document.getElementById('btnModeGrouped').classList.toggle('active', mode==='grouped'); createP1RatesChart(mode); }
+        createP1RatesChart();
 
-            if(mode === 'stacked') {
-                chartP1Rates = new Chart(ctxP1Rates, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Abril 2026', 'Mayo 2026'],
-                        datasets: [
-                            { label: '% Entregados (Éxito)', data: [74.09, 77.89], backgroundColor: '#10b981', borderRadius: 4 },
-                            { label: '% Rechazados', data: [25.91, 22.11], backgroundColor: '#ef4444', borderRadius: 4 }
-                        ]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        scales: {
-                            x: { stacked: true, max: 100, ticks: { callback: v => v + '%' } },
-                            y: { stacked: true }
-                        },
-                        plugins: { tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` } } }
-                    }
-                });
-            } else {
-                chartP1Rates = new Chart(ctxP1Rates, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Tasa de Entrega (%)', 'Tasa de Rechazo (%)'],
-                        datasets: [
-                            { label: 'Abril', data: [74.09, 25.91], backgroundColor: '#1e4976', borderRadius: 4 },
-                            { label: 'Mayo', data: [77.89, 22.11], backgroundColor: '#00b4d8', borderRadius: 4 }
-                        ]
-                    },
-                    options: {
-                        scales: { y: { max: 100, ticks: { callback: v => v + '%' } } }
-                    }
-                });
-            }
+        // Gráficos Pág 2
+        let chartMainP2 = new Chart(document.getElementById('chartMainP2').getContext('2d'), { type: 'bar', data: { labels: ['SOLISO', 'STARHOME', 'ALICLICK'], datasets: [{ label: 'Mayo', data: [1229, 1058, 871], backgroundColor: '#1e4976' }, { label: 'Junio', data: [760, 1014, 828], backgroundColor: '#00b4d8' }] } });
+        new Chart(document.getElementById('chartDonutP2').getContext('2d'), { type: 'doughnut', data: { labels: ['SOLISO', 'STARHOME', 'ALICLICK'], datasets: [{ data: [14.8, 15.9, 19.6], backgroundColor: ['#0f2537', '#1e4976', '#00b4d8'] }] } });
+        
+        function updateDashboardP2() {
+            const sel = document.getElementById('brandFilterP2').value;
+            document.querySelectorAll('#mainTableP2 tbody tr').forEach(r => r.style.display = (sel === 'ALL' || r.getAttribute('data-brand') === sel) ? '' : 'none');
         }
 
-        function toggleRatesView(mode) {
-            document.getElementById('btnModeStacked').classList.toggle('active', mode === 'stacked');
-            document.getElementById('btnModeGrouped').classList.toggle('active', mode === 'grouped');
-            createP1RatesChart(mode);
-        }
-
-        createP1RatesChart('stacked');
-
-        new Chart(document.getElementById('chartP1Winner').getContext('2d'), {
-            type: 'bar',
-            indexAxis: 'y',
-            data: {
-                labels: ['Abril', 'Mayo'],
-                datasets: [{ label: 'Unidades Golden Lure', data: [704, 610], backgroundColor: ['#1e4976', '#00b4d8'] }]
-            }
-        });
-
-        new Chart(document.getElementById('chartP1Stores').getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: ['ANCOR (Anthony C.)', 'STEELTRAIL (Gearson)'],
-                datasets: [{ label: 'Pedidos Mayo', data: [232, 78], backgroundColor: ['#0f2537', '#00b4d8'] }]
-            }
-        });
-
-        // ================= CHARTS PÁGINA 2 =================
-        const brandDataP2 = {
-            ALL: { unid: "1,774", ped: "986", rech: "15.1%", shalom: "1,059", bar: [760, 1014, 828] },
-            SOLISO: { unid: "760", ped: "459", rech: "14.8%", shalom: "298", bar: [760, 0, 0] },
-            STARHOME: { unid: "1,014", ped: "526", rech: "15.9%", shalom: "528", bar: [0, 1014, 0] },
-            ALICLICK: { unid: "828", ped: "468", rech: "19.6%", shalom: "233", bar: [0, 0, 828] }
+        // ================= JS PÁGINA 3 (JUN-JUL) =================
+        const brandDataP3 = {
+            ALL: { unid: "2,230", ped: "1,228", rech: "14.2%", shalom: "646", bar: [760, 1014, 828], barJul: [525, 884, 821] }, 
+            SOLISO: { unid: "525", ped: "294", rech: "13.0%", shalom: "282", bar: [760, 0, 0], barJul: [525, 0, 0] },
+            STARHOME: { unid: "884", ped: "457", rech: "16.4%", shalom: "364", bar: [0, 1014, 0], barJul: [0, 884, 0] },
+            ALICLICK: { unid: "821", ped: "477", rech: "12.8%", shalom: "0", bar: [0, 0, 828], barJul: [0, 0, 821] }
         };
 
-        const ctxMainP2 = document.getElementById('chartMainP2').getContext('2d');
-        let chartMainP2 = new Chart(ctxMainP2, {
+        const ctxMainP3 = document.getElementById('chartMainP3').getContext('2d');
+        let chartMainP3 = new Chart(ctxMainP3, {
             type: 'bar',
             data: {
-                labels: ['SOLISO (Oxitron)', 'STARHOME (Diamantex)', 'ALICLICK'],
+                labels: ['SOLISO', 'STARHOME', 'ALICLICK'],
                 datasets: [
-                    { label: 'Mayo', data: [1229, 1058, 871], backgroundColor: '#1e4976', borderRadius: 4 },
-                    { label: 'Junio', data: [760, 1014, 828], backgroundColor: '#00b4d8', borderRadius: 4 }
+                    { label: 'Junio', data: [760, 1014, 828], backgroundColor: '#1e4976', borderRadius: 4 },
+                    { label: 'Julio', data: [525, 884, 821], backgroundColor: '#00b4d8', borderRadius: 4 }
                 ]
             }
         });
 
-        function updateDashboardP2() {
-            const selected = document.getElementById('brandFilterP2').value;
-            const data = brandDataP2[selected];
+        function updateDashboardP3() {
+            const selected = document.getElementById('brandFilterP3').value;
+            const data = brandDataP3[selected];
 
-            document.getElementById('kpiUnidP2').innerText = data.unid;
-            document.getElementById('kpiPedP2').innerText = data.ped;
-            document.getElementById('kpiRechP2').innerText = data.rech;
-            document.getElementById('kpiShalomP2').innerText = data.shalom;
+            document.getElementById('kpiUnidP3').innerText = data.unid;
+            document.getElementById('kpiPedP3').innerText = data.ped;
+            document.getElementById('kpiRechP3').innerText = data.rech;
+            document.getElementById('kpiShalomP3').innerText = data.shalom;
 
-            chartMainP2.data.datasets[1].data = data.bar;
-            chartMainP2.update();
+            chartMainP3.data.datasets[0].data = data.bar;
+            chartMainP3.data.datasets[1].data = data.barJul;
+            chartMainP3.update();
 
-            const rows = document.querySelectorAll('#mainTableP2 tbody tr');
-            rows.forEach(row => {
-                if (selected === 'ALL' || row.getAttribute('data-brand') === selected) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+            document.querySelectorAll('#mainTableP3 tbody tr').forEach(r => {
+                r.style.display = (selected === 'ALL' || r.getAttribute('data-brand') === selected) ? '' : 'none';
             });
         }
 
-        function changeMetricP2(metric, btn) {
-            document.querySelectorAll('.btn-pill').forEach(b => b.classList.remove('active'));
+        function changeMetricP3(metric, btn) {
+            document.querySelectorAll('#page3 .btn-pill').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
             if(metric === 'unidades') {
-                document.getElementById('chart1TitleP2').innerText = "Comparativo de Unidades Entregadas por Marca";
-                chartMainP2.data.datasets[0].data = [1229, 1058, 871];
-                chartMainP2.data.datasets[1].data = [760, 1014, 828];
+                document.getElementById('chart1TitleP3').innerText = "Comparativo de Unidades Entregadas por Marca";
+                chartMainP3.data.datasets[0].data = [760, 1014, 828]; 
+                chartMainP3.data.datasets[1].data = [525, 884, 821];  
             } else if(metric === 'pedidos') {
-                document.getElementById('chart1TitleP2').innerText = "Comparativo de Pedidos Entregados por Marca";
-                chartMainP2.data.datasets[0].data = [674, 572, 502];
-                chartMainP2.data.datasets[1].data = [459, 526, 468];
+                document.getElementById('chart1TitleP3').innerText = "Comparativo de Pedidos Entregados por Marca";
+                chartMainP3.data.datasets[0].data = [459, 526, 468];  
+                chartMainP3.data.datasets[1].data = [294, 457, 477];  
             } else if(metric === 'rechazo') {
-                document.getElementById('chart1TitleP2').innerText = "Tasa de Rechazo (%) por Marca";
-                chartMainP2.data.datasets[0].data = [18.4, 13.7, 22.1];
-                chartMainP2.data.datasets[1].data = [14.8, 15.9, 19.6];
+                document.getElementById('chart1TitleP3').innerText = "Tasa de Rechazo (%) por Marca";
+                chartMainP3.data.datasets[0].data = [14.8, 15.9, 19.6]; 
+                chartMainP3.data.datasets[1].data = [13.0, 16.4, 12.8]; 
             }
-            chartMainP2.update();
+            chartMainP3.update();
         }
 
-        new Chart(document.getElementById('chartDonutP2').getContext('2d'), {
+        new Chart(document.getElementById('chartDonutP3').getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: ['SOLISO', 'STARHOME', 'ALICLICK'],
-                datasets: [{ data: [14.8, 15.9, 19.6], backgroundColor: ['#0f2537', '#1e4976', '#00b4d8'] }]
+                labels: ['SOLISO (13.0%)', 'STARHOME (16.4%)', 'ALICLICK (12.8%)'],
+                datasets: [{ data: [13.0, 16.4, 12.8], backgroundColor: ['#0f2537', '#1e4976', '#00b4d8'] }]
             }
         });
 
-        const productComparisonData = {
-            ALL: {
-                labels: ['Golden Lure', 'Diamantex', 'Oxitron Gris', 'Oxitron Negro', 'Artistry', 'Fem Vita', 'Ouhoe'],
-                mayo: [610, 930, 521, 304, 15, 6, 83],
-                junio: [500, 926, 297, 208, 118, 87, 85]
-            },
-            'GOLDEN LURE': { labels: ['Mayo', 'Junio'], mayo: [610, 0], junio: [0, 500], singleMayo: 610, singleJunio: 500 },
-            'DIAMANTEX': { labels: ['Mayo', 'Junio'], mayo: [930, 0], junio: [0, 926], singleMayo: 930, singleJunio: 926 },
-            'OXITRON GRIS': { labels: ['Mayo', 'Junio'], mayo: [521, 0], junio: [0, 297], singleMayo: 521, singleJunio: 297 },
-            'OXITRON NEGRO': { labels: ['Mayo', 'Junio'], mayo: [304, 0], junio: [0, 208], singleMayo: 304, singleJunio: 208 },
-            'ARTISTRY': { labels: ['Mayo', 'Junio'], mayo: [15, 0], junio: [0, 118], singleMayo: 15, singleJunio: 118 },
-            'FEM VITA': { labels: ['Mayo', 'Junio'], mayo: [6, 0], junio: [0, 87], singleMayo: 6, singleJunio: 87 },
-            'OUHOE': { labels: ['Mayo', 'Junio'], mayo: [83, 0], junio: [0, 85], singleMayo: 83, singleJunio: 85 }
+        const prodCompP3 = {
+            ALL: { labels: ['Golden Lure', 'Diamantex', 'Oxitron Gris', 'Fem Vita', 'Artistry'], jun: [500, 926, 297, 87, 118], jul: [407, 818, 227, 200, 158] },
+            'DIAMANTEX': { labels: ['Junio', 'Julio'], jun: [926, 0], jul: [0, 818] },
+            'GOLDEN LURE': { labels: ['Junio', 'Julio'], jun: [500, 0], jul: [0, 407] },
+            'FEM VITA': { labels: ['Junio', 'Julio'], jun: [87, 0], jul: [0, 200] },
+            'ARTISTRY': { labels: ['Junio', 'Julio'], jun: [118, 0], jul: [0, 158] },
+            'OXITRON GRIS': { labels: ['Junio', 'Julio'], jun: [297, 0], jul: [0, 227] }
         };
 
-        const ctxLineP2 = document.getElementById('chartLineP2').getContext('2d');
-        let chartLineP2 = new Chart(ctxLineP2, {
+        const ctxLineP3 = document.getElementById('chartLineP3').getContext('2d');
+        let chartLineP3 = new Chart(ctxLineP3, {
             type: 'bar',
+            data: { labels: prodCompP3.ALL.labels, datasets: [{ label: 'Unidades Junio', data: prodCompP3.ALL.jun, backgroundColor: '#1e4976', borderRadius: 6 }, { label: 'Unidades Julio', data: prodCompP3.ALL.jul, backgroundColor: '#00b4d8', borderRadius: 6 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+        });
+
+        function updateLineProductChartP3() {
+            const sel = document.getElementById('lineProductSelectP3').value;
+            const data = prodCompP3[sel];
+            chartLineP3.data.labels = sel === 'ALL' ? data.labels : [`${sel} (Jun vs Jul)`];
+            chartLineP3.data.datasets[0].data = sel === 'ALL' ? data.jun : [data.jun[0]];
+            chartLineP3.data.datasets[1].data = sel === 'ALL' ? data.jul : [data.jul[1]];
+            chartLineP3.update();
+        }
+
+        // Gráficos Pág 4 (4 Meses)
+        new Chart(document.getElementById('chartTrend4M').getContext('2d'), {
+            type: 'line',
             data: {
-                labels: productComparisonData.ALL.labels,
+                labels: ['Abril', 'Mayo', 'Junio', 'Julio'],
                 datasets: [
-                    { label: 'Unidades Mayo', data: productComparisonData.ALL.mayo, backgroundColor: '#1e4976', borderRadius: 6 },
-                    { label: 'Unidades Junio', data: productComparisonData.ALL.junio, backgroundColor: '#00b4d8', borderRadius: 6 }
+                    { label: 'Diamantex', data: [720, 930, 926, 818], borderColor: '#00b4d8', backgroundColor: 'rgba(0,180,216,0.1)', fill: true, tension: 0.3 },
+                    { label: 'Golden Lure', data: [704, 610, 500, 407], borderColor: '#ef4444', tension: 0.3 },
+                    { label: 'Oxitron Gris', data: [381, 521, 297, 227], borderColor: '#f59e0b', tension: 0.3 },
+                    { label: 'Fem Vita', data: [0, 6, 87, 200], borderColor: '#10b981', tension: 0.3 }
                 ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: true, position: 'top' },
-                    tooltip: { mode: 'index', intersect: false }
-                },
-                scales: { y: { beginAtZero: true } }
             }
         });
 
-        function updateLineProductChart() {
-            const selectedProd = document.getElementById('lineProductSelect').value;
-            
-            if (selectedProd === 'ALL') {
-                chartLineP2.config.type = 'bar';
-                chartLineP2.data.labels = productComparisonData.ALL.labels;
-                chartLineP2.data.datasets[0].label = 'Unidades Mayo';
-                chartLineP2.data.datasets[0].data = productComparisonData.ALL.mayo;
-                
-                chartLineP2.data.datasets[1].label = 'Unidades Junio';
-                chartLineP2.data.datasets[1].data = productComparisonData.ALL.junio;
-            } else {
-                const item = productComparisonData[selectedProd];
-                chartLineP2.config.type = 'bar';
-                chartLineP2.data.labels = [`${selectedProd} (Mayo vs Junio)`];
-                chartLineP2.data.datasets[0].label = 'Unidades Mayo';
-                chartLineP2.data.datasets[0].data = [item.singleMayo];
-                
-                chartLineP2.data.datasets[1].label = 'Unidades Junio';
-                chartLineP2.data.datasets[1].data = [item.singleJunio];
-            }
-            
-            chartLineP2.update();
-        }
-
-        new Chart(document.getElementById('chartShalomP2').getContext('2d'), {
+        new Chart(document.getElementById('chartRechazoSoliso4M').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: ['SOLISO', 'STARHOME', 'ALICLICK'],
-                datasets: [
-                    { label: 'Mayo', data: [521, 516, 0], backgroundColor: '#1e4976' },
-                    { label: 'Junio', data: [298, 528, 233], backgroundColor: '#00b4d8' }
-                ]
+                labels: ['Abril', 'Mayo', 'Junio', 'Julio'],
+                datasets: [{ label: '% Rechazo Global', data: [25.9, 22.1, 15.1, 14.2], backgroundColor: ['#ef4444', '#f59e0b', '#38bdf8', '#10b981'], borderRadius: 6 }]
             }
         });
     </script>
